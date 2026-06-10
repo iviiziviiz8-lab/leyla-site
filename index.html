@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>With Love, For You 🌸</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Great+Vibes&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div id="loader">
+<div class="loader-inner">
+
+<h2 class="loader-text">
+Loading something special...
+</h2>
+
+</div>
+</div>
+
+<div class="cinematic-vignette"></div>
+
+<canvas id="particle-canvas"></canvas>
+
+<div id="petals-bg" class="petals-layer"></div>
+<div id="petals-mid" class="petals-layer"></div>
+<div id="petals-fg" class="petals-layer"></div>
+
+<div id="main-site">
+
+<section id="hero">
+
+<div class="hero-content">
+
+<p class="hero-eyebrow">
+a love letter in bloom
+</p>
+
+<h1 class="hero-title">
+<span class="line1">
+For You Leyla,
+</span>
+
+<span class="line2">
+My Everything
+</span>
+</h1>
+
+<p class="hero-sub">
+Every petal holds a whisper of how much you mean to me.
+</p>
+
+<div class="hero-flower-wrap">
+
+<div class="flower-halo"></div>
+
+<div style="font-size:80px">
+🌸
+</div>
+
+</div>
+
+<button class="btn-love">
+<span class="btn-heart">♥</span>
+I Love You
+</button>
+
+</div>
+
+</section>
+
+<section id="counter">
+
+<div class="section-inner">
+
+<h2 class="section-title">
+Since We Met
+</h2>
+
+<div class="counter-grid">
+
+<div class="counter-item">
+<div id="days" class="counter-val">0</div>
+<div class="counter-label">Days</div>
+</div>
+
+<div class="counter-item">
+<div id="hours" class="counter-val">0</div>
+<div class="counter-label">Hours</div>
+</div>
+
+<div class="counter-item">
+<div id="minutes" class="counter-val">0</div>
+<div class="counter-label">Minutes</div>
+</div>
+
+<div class="counter-item">
+<div id="seconds" class="counter-val">0</div>
+<div class="counter-label">Seconds</div>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+</div>
+<div class="music-player">
+
+    <div class="music-cover">
+        <img src="assets/images/cover.jpg" alt="Love For You">
+    </div>
+
+    <div class="music-content">
+
+        <h3 class="song-title">
+            Love For You
+        </h3>
+
+        <p class="song-artist">
+            Loveli Lori & OVG!
+        </p>
+
+        <div class="progress-container">
+
+            <span id="currentTime">0:00</span>
+
+            <input
+            type="range"
+            id="progressBar"
+            value="0"
+            min="0"
+            max="100">
+
+            <span id="duration">0:00</span>
+
+        </div>
+
+        <div class="controls">
+
+            <button class="control-btn">⏮</button>
+
+            <button id="musicBtn" class="play-btn">▶</button>
+
+            <button class="control-btn">⏭</button>
+
+        </div>
+        <div class="volume-container">
+
+    <span class="volume-icon">🔊</span>
+
+    <input
+    type="range"
+    id="volumeBar"
+    min="0"
+    max="100"
+    value="80">
+
+</div>
+
+</div>
+
+<audio id="bgMusic" loop>
+    <source src="assets/music/loveforyou.mp3" type="audio/mpeg">
+</audio>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
