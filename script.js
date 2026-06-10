@@ -260,3 +260,27 @@ music.volume =
 volumeBar.value / 100;
 
 });
+const closePlayer =
+document.getElementById("closePlayer");
+
+const showPlayer =
+document.getElementById("showPlayer");
+
+const player =
+document.querySelector(".music-player");
+
+closePlayer.addEventListener("click",()=>{
+
+player.style.display = "none";
+
+showPlayer.style.display = "flex";
+
+});
+
+showPlayer.addEventListener("click",()=>{
+
+player.style.display = "block";
+
+showPlayer.style.display = "none";
+
+});
