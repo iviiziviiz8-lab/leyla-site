@@ -1,186 +1,266 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>With Love, For You 🌸</title>
-
-<link rel="stylesheet" href="style.css">
-
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Great+Vibes&family=Lato:wght@300;400&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#080006">
+  <title>For You Leyla</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
+<body class="intro-locked">
+  <div id="loader" aria-label="Loading">
+    <div class="loader-card">
+      <div class="loader-orbit">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <p>Preparing something beautiful</p>
+      <div class="loader-line"><i></i></div>
+    </div>
+  </div>
 
-<body>
-
-<div id="loader">
-<div class="loader-inner">
-
-<h2 class="loader-text">
-Loading something special...
-</h2>
-
-</div>
-</div>
-
-<div class="cinematic-vignette"></div>
-
-<canvas id="particle-canvas"></canvas>
-
-<div id="petals-bg" class="petals-layer"></div>
-<div id="petals-mid" class="petals-layer"></div>
-<div id="petals-fg" class="petals-layer"></div>
-
-<div id="main-site">
-
-<section id="hero">
-
-<div class="hero-content">
-
-<p class="hero-eyebrow">
-a love letter in bloom
-</p>
-
-<h1 class="hero-title">
-<span class="line1">
-For You Leyla,
-</span>
-
-<span class="line2">
-My Everything
-</span>
-</h1>
-
-<p class="hero-sub">
-Every petal holds a whisper of how much you mean to me.
-</p>
-
-<div class="hero-flower-wrap">
-
-<div class="flower-halo"></div>
-
-<div style="font-size:80px">
-🌸
-</div>
-
-</div>
-
-<button class="btn-love">
-<span class="btn-heart">♥</span>
-I Love You
-</button>
-
-</div>
-
-</section>
-
-<section id="counter">
-
-<div class="section-inner">
-
-<h2 class="section-title">
-Since We Met
-</h2>
-
-<div class="counter-grid">
-
-<div class="counter-item">
-<div id="days" class="counter-val">0</div>
-<div class="counter-label">Days</div>
-</div>
-
-<div class="counter-item">
-<div id="hours" class="counter-val">0</div>
-<div class="counter-label">Hours</div>
-</div>
-
-<div class="counter-item">
-<div id="minutes" class="counter-val">0</div>
-<div class="counter-label">Minutes</div>
-</div>
-
-<div class="counter-item">
-<div id="seconds" class="counter-val">0</div>
-<div class="counter-label">Seconds</div>
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-</div>
-<div class="music-player">
-<button id="closePlayer" class="close-player">
-✕
-</button>
-    <div class="music-cover">
-        <img src="cover.jpg" alt="Love For You">
+  <section class="gift-intro" id="giftIntro" aria-label="Gift for Leyla">
+    <div class="gift-copy">
+      <p class="eyebrow">Before you enter</p>
+      <h1>A little gift for Leyla</h1>
+      <p>
+        I wanted this to feel different from the first one. More personal,
+        more honest, and made for the girl I never stopped caring about.
+      </p>
     </div>
 
-    <div class="music-content">
+    <button class="gift-box" id="giftBox" type="button" aria-label="Open the gift">
+      <span class="gift-lid"></span>
+      <span class="gift-ribbon gift-ribbon-vertical"></span>
+      <span class="gift-ribbon gift-ribbon-horizontal"></span>
+      <span class="gift-body"></span>
+      <span class="gift-bow gift-bow-left"></span>
+      <span class="gift-bow gift-bow-right"></span>
+      <span class="gift-note">Open it</span>
+    </button>
 
-        <h3 class="song-title">
-            Love For You
-        </h3>
+    <div class="gift-reveal-card" id="giftRevealCard" aria-hidden="true">
+      <p class="eyebrow">One more thing</p>
+      <h2>This is not the same gift.</h2>
+      <p>
+        I rebuilt the beginning because you already saw the first site.
+        This time, I wanted the first seconds to feel like opening a private memory.
+      </p>
+      <button class="enter-btn" id="enterSite" type="button">Enter the page</button>
+    </div>
 
-        <p class="song-artist">
-            Loveli Lori & OVG!
+    <p class="gift-whisper">Tap the gift. I made the rest different on purpose.</p>
+  </section>
+
+  <canvas id="particle-canvas" aria-hidden="true"></canvas>
+  <div id="petals" aria-hidden="true"></div>
+  <div class="page-glow" aria-hidden="true"></div>
+
+  <main id="main-site">
+    <section class="hero" id="home">
+      <div class="hero-media" aria-hidden="true">
+        <img src="cover.png" alt="">
+      </div>
+      <div class="hero-content reveal">
+        <p class="eyebrow">A private little universe</p>
+        <h1>For You Leyla</h1>
+        <p class="hero-subtitle">
+          I did not want to show you the same thing again. I wanted to build something that feels closer to our story.
         </p>
-
-        <div class="progress-container">
-
-            <span id="currentTime">0:00</span>
-
-            <input
-            type="range"
-            id="progressBar"
-            value="0"
-            min="0"
-            max="100">
-
-            <span id="duration">0:00</span>
-
+        <div class="hero-actions">
+          <a class="primary-btn" href="#letter">Read what I feel</a>
+          <button class="ghost-btn" id="sparkBtn" type="button">Make it glow</button>
         </div>
+      </div>
+      <a class="scroll-cue" href="#counter" aria-label="Scroll down"></a>
+    </section>
 
-        <div class="controls">
+    <section class="section counter-section" id="counter">
+      <div class="section-head reveal">
+        <p class="eyebrow">Since we met</p>
+        <h2>Even distance could not make it small</h2>
+      </div>
+      <div class="counter-grid reveal">
+        <article>
+          <strong id="days">0</strong>
+          <span>days</span>
+        </article>
+        <article>
+          <strong id="hours">0</strong>
+          <span>hours</span>
+        </article>
+        <article>
+          <strong id="minutes">0</strong>
+          <span>minutes</span>
+        </article>
+        <article>
+          <strong id="seconds">0</strong>
+          <span>seconds</span>
+        </article>
+      </div>
+    </section>
 
-            <button class="control-btn">⏮</button>
-
-            <button id="musicBtn" class="play-btn">▶</button>
-
-            <button class="control-btn">⏭</button>
-
+    <section class="section distance-section" id="distance">
+      <div class="section-head reveal">
+        <p class="eyebrow">Our distance</p>
+        <h2>We loved through a screen, but it felt real</h2>
+      </div>
+      <div class="call-stage reveal">
+        <div class="call-window">
+          <div class="call-topbar">
+            <span></span>
+            <span></span>
+            <span></span>
+            <strong>Camera call with Leyla</strong>
+          </div>
+          <div class="call-screen">
+            <div class="call-person">
+              <img src="cover.png" alt="Music cover memory">
+              <span>memory</span>
+            </div>
+            <div class="call-person dark">
+              <span class="camera-dot"></span>
+              <p>Your face on my screen felt closer than anyone around me.</p>
+            </div>
+          </div>
+          <div class="call-controls" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
         </div>
-        <div class="volume-container">
+        <div class="distance-notes">
+          <article>
+            <span>01</span>
+            <p>We were far away, but the calls made it feel like you were right there.</p>
+          </article>
+          <article>
+            <span>02</span>
+            <p>I remember waiting for your messages like they could change my whole day.</p>
+          </article>
+          <article>
+            <span>03</span>
+            <p>Even after you left, I could not pretend what we had meant nothing.</p>
+          </article>
+        </div>
+      </div>
+    </section>
 
-    <span class="volume-icon">🔊</span>
+    <section class="section letter-section" id="letter">
+      <div class="section-head reveal">
+        <p class="eyebrow">Interactive letter</p>
+        <h2>Only for you</h2>
+      </div>
+      <div class="letter-wrap reveal">
+        <button class="envelope" id="openLetter" type="button" aria-expanded="false">
+          <span class="envelope-flap"></span>
+          <span class="envelope-body"></span>
+          <span class="envelope-seal">Love</span>
+        </button>
+        <article class="love-letter" id="loveLetter" aria-hidden="true">
+          <p class="letter-kicker">My Leyla,</p>
+          <p>
+            I know I already showed you a site before, so I did not want this to feel
+            like a repeat. I wanted this one to feel like I sat with our story and built
+            something new from it.
+          </p>
+          <p>
+            We knew each other from a distance, through cameras, calls, messages, and
+            late moments where somehow it still felt close. And honestly, I loved you
+            more than the distance should have allowed.
+          </p>
+          <p>
+            When you left, it hurt, because what I felt was real. Now that we are talking
+            again, I do not want to force anything. I just want you to see that I still
+            care, and that I made this with intention.
+          </p>
+          <p class="signature">With everything I never said properly</p>
+        </article>
+      </div>
+    </section>
 
-    <input
-    type="range"
-    id="volumeBar"
-    min="0"
-    max="100"
-    value="80">
+    <section class="section timeline-section" id="timeline">
+      <div class="section-head reveal">
+        <p class="eyebrow">Our story</p>
+        <h2>Not perfect, but unforgettable</h2>
+      </div>
+      <div class="timeline reveal">
+        <article>
+          <time>The beginning</time>
+          <h3>When your name started meaning something</h3>
+          <p>It began from far away, but somehow you became part of my everyday life.</p>
+        </article>
+        <article>
+          <time>The calls</time>
+          <h3>Camera on, hearts closer</h3>
+          <p>Seeing you through a screen never felt empty. It felt like home for a while.</p>
+        </article>
+        <article>
+          <time>Now</time>
+          <h3>Talking again, softly</h3>
+          <p>I do not want to make things heavy. I just want to be honest, gentle, and real.</p>
+        </article>
+      </div>
+    </section>
 
-</div>
+    <section class="section memories-section" id="memories">
+      <div class="section-head reveal">
+        <p class="eyebrow">What stayed</p>
+        <h2>The things I could not forget</h2>
+      </div>
+      <div class="memory-grid reveal">
+        <article><span>01</span><p>Your voice when it made a bad day feel lighter.</p></article>
+        <article><span>02</span><p>The little pause before you smiled on camera.</p></article>
+        <article><span>03</span><p>The way a simple call could feel like the best part of my day.</p></article>
+      </div>
+    </section>
 
-</div>
+    <section class="final-message">
+      <div class="final-inner reveal">
+        <p class="eyebrow">Final message</p>
+        <h2>Leyla, I wanted you to feel the effort.</h2>
+        <p>
+          If this page could say one thing, it would be this: what I felt for you was real,
+          and I still care enough to make something that does not feel ordinary.
+        </p>
+      </div>
+    </section>
+  </main>
 
-<audio id="bgMusic" loop>
-    <source src="loveforyou.mp3" type="audio/mpeg">
+  <footer class="footer">
+    <p>Made with love, for Leyla.</p>
+  </footer>
+
+  <aside class="music-player" id="musicPlayer" aria-label="Music player">
+    <button class="close-player" id="closePlayer" type="button" aria-label="Close player">x</button>
+    <div class="disc">
+      <img src="cover.png" alt="Apocalypse cover">
+    </div>
+    <div class="track-info">
+      <strong>Apocalypse</strong>
+      <span>Cigarettes After Sex</span>
+    </div>
+    <div class="progress-row">
+      <span id="currentTime">0:00</span>
+      <input id="progressBar" type="range" min="0" max="100" value="0" aria-label="Progress">
+      <span id="duration">0:00</span>
+    </div>
+    <p class="audio-status" id="audioStatus">Tap Play to start the song</p>
+    <div class="player-controls">
+      <button id="musicBtn" class="play-btn" type="button" aria-label="Play music">Play</button>
+      <input id="volumeBar" type="range" min="0" max="100" value="90" aria-label="Volume">
+    </div>
+    <audio id="bgMusic" loop preload="auto" controls>
+    <source src="Apocalypse.mp3" type="audio/mpeg">
 </audio>
+  </aside>
 
-</div>
+  <button id="showPlayer" class="show-player" type="button" aria-label="Show player">Music</button>
 
-<div id="showPlayer" class="show-player">
-🎵
-
-</div>
-
-<script src="script.js"></script>
-
+  <script src="script.js"></script>
 </body>
 </html>
