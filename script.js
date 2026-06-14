@@ -1,286 +1,320 @@
-// Loader
+const meetDate = new Date("2026-02-28T00:00:00");
 
-window.addEventListener("load", () => {
-    setTimeout(() => {
-        document.getElementById("loader").classList.add("fade-out");
-
-        const main = document.getElementById("main-site");
-
-        if(main){
-            main.classList.add("visible");
-        }
-
-    }, 1800);
-});
-
-// Compteur
-
-const targetDate = new Date("February 28, 2026 00:00:00");
-
-function updateCounter() {
-
-    const now = new Date();
-
-    const diff = now - targetDate;
-
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-    const hours = Math.floor(
-        (diff % (1000 * 60 * 60 * 24))
-        /
-        (1000 * 60 * 60)
-    );
-
-    const minutes = Math.floor(
-        (diff % (1000 * 60 * 60))
-        /
-        (1000 * 60)
-    );
-
-    const seconds = Math.floor(
-        (diff % (1000 * 60))
-        /
-        1000
-    );
-
-    document.getElementById("days").textContent = days;
-    document.getElementById("hours").textContent = hours;
-    document.getElementById("minutes").textContent = minutes;
-    document.getElementById("seconds").textContent = seconds;
-}
-
-setInterval(updateCounter, 1000);
-
-updateCounter();
-
-// Pétales
-
-function createPetal(layerId) {
-
-    const layer = document.getElementById(layerId);
-
-    const petal = document.createElement("div");
-
-    petal.classList.add("petal");
-
-    const size = Math.random() * 20 + 10;
-
-    petal.style.width = `${size}px`;
-    petal.style.height = `${size * 1.5}px`;
-
-    petal.style.left = `${Math.random() * 100}%`;
-
-    petal.style.background =
-        "rgba(255,182,193,0.7)";
-
-    petal.style.setProperty(
-        "--drift",
-        `${(Math.random() * 200) - 100}px`
-    );
-
-    petal.style.setProperty(
-        "--spin",
-        `${(Math.random() * 720) - 360}deg`
-    );
-
-    petal.style.animationDuration =
-        `${8 + Math.random() * 10}s`;
-
-    layer.appendChild(petal);
-
-    setTimeout(() => {
-        petal.remove();
-    }, 18000);
-}
-
-setInterval(() => createPetal("petals-bg"), 500);
-setInterval(() => createPetal("petals-mid"), 350);
-setInterval(() => createPetal("petals-fg"), 250);
-
-// Particules
-
-const canvas =
-document.getElementById("particle-canvas");
-
-const ctx =
-canvas.getContext("2d");
+const loader = document.getElementById("loader");
+const giftIntro = document.getElementById("giftIntro");
+const giftBox = document.getElementById("giftBox");
+const giftRevealCard = document.getElementById("giftRevealCard");
+const enterSite = document.getElementById("enterSite");
+const daysEl = document.getElementById("days");
+const hoursEl = document.getElementById("hours");
+const minutesEl = document.getElementById("minutes");
+const secondsEl = document.getElementById("seconds");
+const petalsLayer = document.getElementById("petals");
+const canvas = document.getElementById("particle-canvas");
+const ctx = canvas.getContext("2d");
+const music = document.getElementById("bgMusic");
+const musicBtn = document.getElementById("musicBtn");
+const progressBar = document.getElementById("progressBar");
+const currentTimeEl = document.getElementById("currentTime");
+const durationEl = document.getElementById("duration");
+const volumeBar = document.getElementById("volumeBar");
+const audioStatus = document.getElementById("audioStatus");
+const player = document.getElementById("musicPlayer");
+const closePlayer = document.getElementById("closePlayer");
+const showPlayer = document.getElementById("showPlayer");
+const openLetter = document.getElementById("openLetter");
+const loveLetter = document.getElementById("loveLetter");
+const sparkBtn = document.getElementById("sparkBtn");
 
 let particles = [];
+let isPlaying = false;
+let petalTimer;
+let siteOpened = false;
+let giftOpened = false;
 
-function resizeCanvas() {
+window.addEventListener("load", () => {
+  window.setTimeout(() => {
+    loader.classList.add("is-hidden");
+  }, 1400);
+});
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+function padNumber(value) {
+  return String(Math.max(0, value)).padStart(2, "0");
 }
 
-resizeCanvas();
+function updateCounter() {
+  const now = new Date();
+  const diff = Math.max(0, now - meetDate);
+  const day = 1000 * 60 * 60 * 24;
+  const hour = 1000 * 60 * 60;
+  const minute = 1000 * 60;
 
-window.addEventListener(
-    "resize",
-    resizeCanvas
-);
+  daysEl.textContent = Math.floor(diff / day);
+  hoursEl.textContent = padNumber(Math.floor((diff % day) / hour));
+  minutesEl.textContent = padNumber(Math.floor((diff % hour) / minute));
+  secondsEl.textContent = padNumber(Math.floor((diff % minute) / 1000));
+}
 
-for(let i = 0; i < 80; i++) {
+updateCounter();
+window.setInterval(updateCounter, 1000);
 
-    particles.push({
+function resizeCanvas() {
+  const ratio = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = Math.floor(window.innerWidth * ratio);
+  canvas.height = Math.floor(window.innerHeight * ratio);
+  canvas.style.width = `${window.innerWidth}px`;
+  canvas.style.height = `${window.innerHeight}px`;
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
 
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-
-        r: Math.random() * 2 + 1,
-
-        dx: (Math.random() - 0.5) * 0.3,
-        dy: (Math.random() - 0.5) * 0.3
-
-    });
+  const count = window.innerWidth < 600 ? 46 : 86;
+  particles = Array.from({ length: count }, () => ({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    r: Math.random() * 1.8 + .6,
+    vx: (Math.random() - .5) * .18,
+    vy: (Math.random() - .5) * .18,
+    alpha: Math.random() * .42 + .16
+  }));
 }
 
 function animateParticles() {
+  ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
-    ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
+  particles.forEach((particle) => {
+    particle.x += particle.vx;
+    particle.y += particle.vy;
+
+    if (particle.x < -10) particle.x = window.innerWidth + 10;
+    if (particle.x > window.innerWidth + 10) particle.x = -10;
+    if (particle.y < -10) particle.y = window.innerHeight + 10;
+    if (particle.y > window.innerHeight + 10) particle.y = -10;
+
+    const gradient = ctx.createRadialGradient(
+      particle.x,
+      particle.y,
+      0,
+      particle.x,
+      particle.y,
+      particle.r * 7
     );
 
-    particles.forEach(p => {
+    gradient.addColorStop(0, `rgba(255, 209, 220, ${particle.alpha})`);
+    gradient.addColorStop(1, "rgba(255, 59, 167, 0)");
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(particle.x, particle.y, particle.r * 7, 0, Math.PI * 2);
+    ctx.fill();
+  });
 
-        p.x += p.dx;
-        p.y += p.dy;
-
-        if(p.x < 0) p.x = canvas.width;
-        if(p.x > canvas.width) p.x = 0;
-
-        if(p.y < 0) p.y = canvas.height;
-        if(p.y > canvas.height) p.y = 0;
-
-        ctx.beginPath();
-
-        ctx.arc(
-            p.x,
-            p.y,
-            p.r,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.fillStyle =
-            "rgba(255,182,193,0.25)";
-
-        ctx.fill();
-    });
-
-    requestAnimationFrame(
-        animateParticles
-    );
+  window.requestAnimationFrame(animateParticles);
 }
 
+resizeCanvas();
 animateParticles();
-const music = document.getElementById("bgMusic");
-const musicBtn = document.getElementById("musicBtn");
+window.addEventListener("resize", resizeCanvas);
 
-let playing = false;
+function createPetal() {
+  const petal = document.createElement("span");
+  const size = Math.random() * 13 + 9;
 
-musicBtn.addEventListener("click",()=>{
+  petal.className = "petal";
+  petal.style.left = `${Math.random() * 100}%`;
+  petal.style.setProperty("--size", `${size}px`);
+  petal.style.setProperty("--drift", `${Math.random() * 170 - 85}px`);
+  petal.style.setProperty("--rotate", `${Math.random() * 520 + 160}deg`);
+  petal.style.setProperty("--duration", `${Math.random() * 6 + 8}s`);
+  petalsLayer.appendChild(petal);
 
-if(!playing){
-
-music.play();
-musicBtn.innerHTML="❚❚";
-playing=true;
-
-}else{
-
-music.pause();
-musicBtn.innerHTML="▶";
-playing=false;
-
+  window.setTimeout(() => petal.remove(), 15000);
 }
 
-});
-const progressBar =
-document.getElementById("progressBar");
-
-const currentTime =
-document.getElementById("currentTime");
-
-const duration =
-document.getElementById("duration");
-
-music.addEventListener("loadedmetadata",()=>{
-
-duration.textContent =
-formatTime(music.duration);
-
-});
-
-music.addEventListener("timeupdate",()=>{
-
-const percent =
-(music.currentTime / music.duration) * 100;
-
-progressBar.value = percent;
-
-currentTime.textContent =
-formatTime(music.currentTime);
-
-});
-
-progressBar.addEventListener("input",()=>{
-
-music.currentTime =
-(progressBar.value / 100)
-*
-music.duration;
-
-});
-
-function formatTime(seconds){
-
-const mins =
-Math.floor(seconds / 60);
-
-const secs =
-Math.floor(seconds % 60);
-
-return mins + ":" +
-(secs < 10 ? "0" : "") +
-secs;
-
+function startPetals() {
+  const delay = window.innerWidth < 600 ? 620 : 360;
+  petalTimer = window.setInterval(createPetal, delay);
 }
-const volumeBar =
-document.getElementById("volumeBar");
 
-music.volume = 0.8;
+startPetals();
 
-volumeBar.addEventListener("input",()=>{
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("is-visible");
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: .16 });
 
-music.volume =
-volumeBar.value / 100;
+document.querySelectorAll(".reveal").forEach((item) => revealObserver.observe(item));
 
+function revealVisibleSections() {
+  document.querySelectorAll(".reveal").forEach((item) => {
+    const rect = item.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      item.classList.add("is-visible");
+    }
+  });
+}
+
+function openGiftIntro() {
+  if (giftOpened) return;
+
+  giftOpened = true;
+  giftIntro.classList.add("is-opening");
+  tryStartMusic();
+
+  for (let index = 0; index < 64; index += 1) {
+    window.setTimeout(() => {
+      createSpark(window.innerWidth / 2, window.innerHeight * .48);
+    }, index * 10);
+  }
+
+  window.setTimeout(() => {
+    giftIntro.classList.add("is-card-ready");
+    giftRevealCard.classList.add("is-visible");
+    giftRevealCard.setAttribute("aria-hidden", "false");
+  }, 780);
+}
+
+function enterMainSite() {
+  if (siteOpened) return;
+
+  siteOpened = true;
+  tryStartMusic();
+  document.body.classList.add("site-open");
+  document.body.classList.remove("intro-locked");
+  giftIntro.classList.add("is-gone");
+  revealVisibleSections();
+  window.scrollTo({ top: 0, behavior: "auto" });
+}
+
+giftBox.addEventListener("click", openGiftIntro);
+enterSite.addEventListener("click", enterMainSite);
+
+openLetter.addEventListener("click", () => {
+  const isOpen = openLetter.classList.toggle("is-open");
+  openLetter.setAttribute("aria-expanded", String(isOpen));
+  loveLetter.classList.toggle("is-visible", isOpen);
+  loveLetter.setAttribute("aria-hidden", String(!isOpen));
 });
-const closePlayer =
-document.getElementById("closePlayer");
 
-const showPlayer =
-document.getElementById("showPlayer");
+function formatTime(seconds) {
+  if (!Number.isFinite(seconds)) return "0:00";
+  const minutes = Math.floor(seconds / 60);
+  const rest = Math.floor(seconds % 60);
+  return `${minutes}:${String(rest).padStart(2, "0")}`;
+}
 
-const player =
-document.querySelector(".music-player");
+function updatePlayState() {
+  musicBtn.textContent = isPlaying ? "Pause" : "Play";
+  player.classList.toggle("is-playing", isPlaying);
+}
 
-closePlayer.addEventListener("click",()=>{
+function setAudioStatus(message, isError = false) {
+  audioStatus.textContent = message;
+  audioStatus.classList.toggle("is-error", isError);
+}
 
-player.style.display = "none";
+music.volume = Number(volumeBar.value) / 100;
+music.load();
+updatePlayState();
 
-showPlayer.style.display = "flex";
+async function tryStartMusic() {
+  try {
+    setAudioStatus("Loading Apocalypse...");
+    music.muted = false;
+    music.volume = Number(volumeBar.value) / 100;
+    if (music.readyState === 0) {
+      music.load();
+    }
+    await music.play();
+    isPlaying = !music.paused;
+    setAudioStatus(isPlaying ? "Playing Apocalypse" : "Tap Play to start the song");
+    updatePlayState();
+  } catch (error) {
+    isPlaying = false;
+    setAudioStatus(`Audio blocked: ${error.name}. Tap Play again.`, true);
+    updatePlayState();
+  }
+}
 
+musicBtn.addEventListener("click", async () => {
+  if (music.paused) {
+    await tryStartMusic();
+  } else {
+    music.pause();
+    isPlaying = false;
+    setAudioStatus("Paused");
+    updatePlayState();
+  }
 });
 
-showPlayer.addEventListener("click",()=>{
+music.addEventListener("loadedmetadata", () => {
+  durationEl.textContent = formatTime(music.duration);
+  setAudioStatus("Ready. Tap Play if it does not start automatically.");
+});
 
-player.style.display = "block";
+music.addEventListener("canplay", () => {
+  if (!isPlaying) {
+    setAudioStatus("Ready. Tap Play to start Apocalypse.");
+  }
+});
 
-showPlayer.style.display = "none";
+music.addEventListener("timeupdate", () => {
+  if (!music.duration) return;
+  progressBar.value = String((music.currentTime / music.duration) * 100);
+  currentTimeEl.textContent = formatTime(music.currentTime);
+});
 
+music.addEventListener("ended", () => {
+  isPlaying = false;
+  setAudioStatus("Ended");
+  updatePlayState();
+});
+
+music.addEventListener("error", () => {
+  const code = music.error ? music.error.code : "unknown";
+  setAudioStatus(`Audio file error (${code}). The MP3 may be unsupported.`, true);
+});
+
+progressBar.addEventListener("input", () => {
+  if (!music.duration) return;
+  music.currentTime = (Number(progressBar.value) / 100) * music.duration;
+});
+
+volumeBar.addEventListener("input", () => {
+  music.volume = Number(volumeBar.value) / 100;
+});
+
+closePlayer.addEventListener("click", () => {
+  player.classList.add("is-hidden");
+  showPlayer.classList.add("is-visible");
+});
+
+showPlayer.addEventListener("click", () => {
+  player.classList.remove("is-hidden");
+  showPlayer.classList.remove("is-visible");
+});
+
+function createSpark(x, y) {
+  const spark = document.createElement("span");
+  spark.className = "spark";
+  spark.style.left = `${x}px`;
+  spark.style.top = `${y}px`;
+  spark.style.setProperty("--x", `${Math.random() * 180 - 90}px`);
+  spark.style.setProperty("--y", `${Math.random() * 180 - 90}px`);
+  document.body.appendChild(spark);
+  window.setTimeout(() => spark.remove(), 900);
+}
+
+sparkBtn.addEventListener("click", () => {
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
+
+  for (let index = 0; index < 34; index += 1) {
+    window.setTimeout(() => createSpark(centerX, centerY), index * 14);
+  }
+});
+
+window.addEventListener("beforeunload", () => {
+  window.clearInterval(petalTimer);
 });
